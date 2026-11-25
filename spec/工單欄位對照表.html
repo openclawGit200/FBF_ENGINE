@@ -1,0 +1,350 @@
+<title>工單欄位對照表</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 設計計劃：
+   色彩 — 冷調紙面 + 墨黑，蓋印紅當唯一強調色；角色各一色（藍/琥珀/綠/紫/灰）
+   字型 — Noto Serif TC 標題（文件感）／Noto Sans TC 內文／JetBrains Mono 欄位與缺口代碼
+   版式 — 單張「運單」卡片，桌面左側粘性目錄，手機單欄；階段橫排流程帶 */
+:root{
+  --paper:#F4F5F2; --card:#FBFBF8; --ink:#1E221F; --ink-soft:#5F665F;
+  --line:#DBDFD7; --line-soft:#E8EBE4;
+  --seal:#B23A2A; --seal-soft:#F3E0DC;
+  --r-thinker:#2F5FA8; --r-planner:#9A6B12; --r-worker:#2E7D4F; --r-engine:#6A716B; --r-human:#7A4AA0;
+  --code-bg:#EEF0EA;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121412; --card:#191C19; --ink:#E4E7E1; --ink-soft:#9AA19B;
+  --line:#2E332E; --line-soft:#252A25;
+  --seal:#E0705C; --seal-soft:#3A2420;
+  --r-thinker:#7DA3E8; --r-planner:#D9A64A; --r-worker:#5FBF8C; --r-engine:#9AA19B; --r-human:#B48AD9;
+  --code-bg:#20241F;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#121412; --card:#191C19; --ink:#E4E7E1; --ink-soft:#9AA19B;
+  --line:#2E332E; --line-soft:#252A25;
+  --seal:#E0705C; --seal-soft:#3A2420;
+  --r-thinker:#7DA3E8; --r-planner:#D9A64A; --r-worker:#5FBF8C; --r-engine:#9AA19B; --r-human:#B48AD9;
+  --code-bg:#20241F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Noto Sans TC",system-ui,sans-serif; font-size:15px; line-height:1.65;
+  margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:1080px; margin:0 auto}
+h1,h2,h3{font-family:"Noto Serif TC",serif; text-wrap:balance}
+code, .mono{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.86em; background:var(--code-bg); padding:1px 5px; border-radius:3px}
+
+/* 文件頭 */
+.doc-head{padding-block:2rem 1.4rem}
+.doc-head .eyebrow{font-size:.78rem; letter-spacing:.14em; color:var(--ink-soft); text-transform:uppercase}
+.doc-head h1{font-size:clamp(1.7rem,4vw,2.5rem); font-weight:900; margin:.35rem 0 .5rem}
+.doc-head .lede{color:var(--ink-soft); max-width:56ch}
+.doc-head .lede b{color:var(--ink)}
+
+/* 布局：桌面左目錄 + 主欄 */
+.layout{display:grid; grid-template-columns:190px 1fr; gap:2.2rem; align-items:start}
+@media (max-width:760px){ .layout{display:block} .toc{position:static !important; margin-bottom:1.6rem} }
+.toc{position:sticky; top:1rem; font-size:.86rem}
+.toc h2{font-size:.8rem; letter-spacing:.1em; color:var(--ink-soft); font-family:"Noto Sans TC"; font-weight:500; margin:0 0 .5rem}
+.toc a{display:block; color:var(--ink-soft); text-decoration:none; padding:.28rem 0; border-left:2px solid transparent; padding-left:.6rem}
+.toc a:hover{color:var(--ink); border-left-color:var(--seal)}
+
+/* 階段流程帶 */
+.flow{display:flex; flex-wrap:wrap; gap:.45rem; align-items:center; margin:1.2rem 0 .4rem}
+.step{display:flex; align-items:center; gap:.45rem; border:1px solid var(--line); background:var(--card);
+  padding:.32rem .6rem; border-radius:999px; font-size:.82rem; white-space:nowrap}
+.step .n{font-family:"JetBrains Mono"; font-size:.7rem; color:var(--ink-soft)}
+.step.rework{border-style:dashed; color:var(--ink-soft)}
+.arrow{color:var(--ink-soft); font-size:.9rem}
+.flow-note{font-size:.82rem; color:var(--ink-soft); margin:0 0 1.6rem}
+
+/* 角色 chip */
+.chip{display:inline-block; font-size:.74rem; font-weight:500; letter-spacing:.06em; padding:.14rem .55rem;
+  border-radius:999px; border:1.5px solid; color:#fff}
+.chip.thinker{background:var(--r-thinker); border-color:var(--r-thinker)}
+.chip.planner{background:var(--r-planner); border-color:var(--r-planner)}
+.chip.worker{background:var(--r-worker); border-color:var(--r-worker)}
+.chip.engine{background:var(--r-engine); border-color:var(--r-engine)}
+.chip.human{background:var(--r-human); border-color:var(--r-human)}
+
+/* 段落卡片 */
+section.card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1.4rem 1.5rem; margin-bottom:1.4rem}
+section.card h2{font-size:1.28rem; font-weight:900; margin:0; display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap}
+section.card h2 .en{font-family:"JetBrains Mono"; font-size:.78rem; font-weight:400; color:var(--ink-soft)}
+.section-sub{color:var(--ink-soft); font-size:.92rem; margin:.5rem 0 1rem}
+
+/* 欄位表 */
+table{width:100%; border-collapse:collapse; font-size:.88rem; margin:.4rem 0}
+.tbl-wrap{overflow-x:auto}
+th{font-weight:500; text-align:left; color:var(--ink-soft); font-size:.78rem; letter-spacing:.05em;
+  border-bottom:1.5px solid var(--line); padding:.4rem .55rem .4rem 0}
+td{border-bottom:1px solid var(--line-soft); padding:.55rem; vertical-align:top}
+td .fname{font-family:"JetBrains Mono"; font-size:.82rem; font-weight:600}
+td .fkind{font-family:"JetBrains Mono"; font-size:.72rem; color:var(--ink-soft)}
+.gap{display:block; margin-top:.3rem; font-family:"JetBrains Mono"; font-size:.74rem; color:var(--seal)}
+.gap::before{content:"▸ 缺口代碼 "; font-family:"Noto Sans TC"; color:var(--ink-soft)}
+
+/* 交出去 列 */
+.handout{display:flex; gap:.6rem; align-items:baseline; margin-top:1rem; padding-top:.9rem; border-top:1px dashed var(--line);
+  font-size:.9rem; color:var(--ink-soft)}
+.handout b{color:var(--ink)}
+.handout .tag{font-family:"JetBrains Mono"; font-size:.74rem; color:var(--ink); background:var(--code-bg);
+  padding:.05rem .4rem; border-radius:3px; white-space:nowrap}
+
+/* 蓋印框（卡住處） */
+.stuck{border:2px solid var(--seal); border-radius:8px; padding:1rem 1.2rem; margin-top:1rem; position:relative; background:var(--seal-soft)}
+.stuck .stamp{position:absolute; top:-.7rem; right:1rem; background:var(--card); padding:0 .5rem;
+  color:var(--seal); font-weight:700; font-size:.8rem; letter-spacing:.12em}
+.stuck p{margin:.3rem 0; font-size:.9rem}
+.stuck .fix{color:var(--ink-soft)}
+
+/* 答案卷 ↔ 答案 兩卡 */
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:.6rem 0}
+@media (max-width:640px){ .pair{grid-template-columns:1fr} }
+.pair .mini{border:1px solid var(--line); border-radius:8px; padding:1rem; background:var(--paper)}
+.pair .mini h3{font-size:.95rem; margin:0 0 .4rem}
+.pair .mini .src{font-size:.76rem; color:var(--ink-soft); margin:0 0 .6rem}
+.pair pre{font-family:"JetBrains Mono"; font-size:.76rem; line-height:1.7; margin:0; overflow-x:auto}
+.pair .linkline{font-size:.85rem; color:var(--ink-soft); margin-top:.9rem}
+
+/* 回執機制 */
+.mech{display:grid; gap:.5rem; margin:.5rem 0}
+.mech .row{display:grid; grid-template-columns:120px 1fr; gap:.8rem; font-size:.9rem; align-items:baseline}
+@media (max-width:560px){ .mech .row{grid-template-columns:1fr; gap:.15rem} .mech .row .k{font-weight:700} }
+.mech .k{font-family:"JetBrains Mono"; font-size:.8rem; color:var(--ink-soft)}
+
+.legend{font-size:.8rem; color:var(--ink-soft); margin-top:.4rem}
+footer{padding:2rem 0 3rem; font-size:.8rem; color:var(--ink-soft)}
+</style>
+
+<div class="wrap">
+<div class="doc-head">
+  <div class="eyebrow">FBF ENGINE · 工單合約</div>
+  <h1>一張工單，一個單號</h1>
+  <p class="lede">整張單就是 <code>W-00X</code> 一個號。它自己<b>不填內容</b>，内容是九關裡<b>各角色輪流填的欄位</b>：
+  每關交件 → 引擎守衛按欄位擋 → 過關推進，缺欄位就<b>退回交給件的角色補</b>（不推進、但不停）。
+  下表逐關列出：誰填、填什麼、引擎擋什麼。</p>
+
+  <div class="flow" aria-label="九關流程">
+    <span class="step"><span class="n">00</span>backlog 待派工</span><span class="arrow">→</span>
+    <span class="step"><span class="n">01</span>design 解法</span><span class="arrow">→</span>
+    <span class="step"><span class="n">02</span>acceptance_design 定驗收</span><span class="arrow">→</span>
+    <span class="step"><span class="n">03</span>build 施工</span><span class="arrow">→</span>
+    <span class="step"><span class="n">04</span>verify 驗收</span><span class="arrow">→</span>
+    <span class="step"><span class="n">05</span>adjudicate 結案裁決</span><span class="arrow">→</span>
+    <span class="step"><span class="n">06</span>closed 結案</span>
+  </div>
+  <div class="flow-note">退回支線（adjudicate 判 rework）：<span class="step rework">rework_design 重做設計</span> →
+  <span class="step rework">rework_build 重做施工</span> → 回 verify（輪次 +1，重工上限 2 次）。</div>
+</div>
+
+<div class="layout">
+<nav class="toc">
+  <h2>目錄</h2>
+  <a href="#work">工單本體（單號＋版本）</a>
+  <a href="#s-design">01 解法設計</a>
+  <a href="#s-accept">02 定驗收方式</a>
+  <a href="#s-build">03 施工</a>
+  <a href="#s-verify">04 驗收</a>
+  <a href="#s-adj">05 結案裁決</a>
+  <a href="#s-rework">支線 重做</a>
+  <a href="#s-closed">06 結案</a>
+  <a href="#handoff">公共：交接八欄</a>
+  <a href="#pair">答案卷與答案</a>
+  <a href="#stuck">目前卡住處</a>
+  <a href="#mech">被退時怎麼回執</a>
+</nav>
+
+<div class="main">
+
+<section class="card" id="work">
+  <h2>工單本體 <span class="en">works</span> <span class="chip engine">引擎</span></h2>
+  <p class="section-sub">引擎開單、引擎推進。人只確認需求、裁決卡住處。角色從不直接寫这张單，只透過交件填欄位。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>意義</th></tr>
+    <tr><td><span class="fname">work_id</span><br><span class="fkind">TEXT</span></td>
+      <td>整張單的唯一單號（如 <code>W-001</code>）。所有關卡、交件、缺口、回執都挂在这个号上。</td></tr>
+    <tr><td><span class="fname">version</span><br><span class="fkind">INT</span></td>
+      <td>樂觀鎖。每次推進 +1；角色重交件要帶 <code>expected_version</code>，對不上就重新讀單再交，避免兩棒撞車。</td></tr>
+    <tr><td><span class="fname">rework_count</span><br><span class="fkind">INT</span></td>
+      <td>重工次數。達上限（2）後不能再 rework，改走 review 檢討或等人裁決。</td></tr>
+    <tr><td><span class="fname">state</span><br><span class="fkind">9 態</span></td>
+      <td>現在跑到哪關。引擎依 state 決定下一棒派給誰、交件要哪些欄位。</td></tr>
+    <tr><td><span class="fname">awaiting_human</span><br><span class="fkind">0/1</span></td>
+      <td>卡住等人。人可用 CLI 裁決：放行重試 / 改寫 / 作廢。</td></tr>
+  </table></div>
+</section>
+
+<section class="card" id="s-design">
+  <h2>01 解法設計 <span class="en">design</span> <span class="chip thinker">THINKER 填</span></h2>
+  <p class="section-sub">對問題出至少兩案，由 <b>THINKER 在同一棒直接產出</b>（<b>不分派 SUBAGENT</b>、不帶 context id）。兩案不得實質相同：成本與修改範圍不能都一樣。三句話講不完的問題應該拆單，不是硬寫。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">solutions</span><br><span class="fkind">list ≥ 2 案</span></td>
+      <td>每案六欄：<code>approach</code> · <code>cost</code> · <code>change_scope</code> · <code>effort</code> · <code>risk</code> · <code>verifiable_by</code>；選填 <code>reuses</code>。<b>案號＝解法清單的順序（1 起算）</b>，不另設欄位。兩案不得實質相同（成本與修改範圍不能都一樣）。
+        <span class="gap">solutions.count / solution.too_similar / solution.field_missing</span></td></tr>
+    <tr><td><span class="fname">design_note</span><br><span class="fkind">text</span></td>
+      <td>設計說明：做了什麼、為什麼這樣做。<span class="gap">design_note.missing</span></td></tr>
+  </table></div>
+  <div class="handout"><span class="tag">交出去</span><span><b>候選方案</b>＋選擇依據 → 下一關 PLANNER 選案、定驗收。</span></div>
+</section>
+
+<section class="card" id="s-accept">
+  <h2>02 定驗收方式 <span class="en">acceptance_design</span> <span class="chip planner">PLANNER 填</span></h2>
+  <p class="section-sub">整張單<b>唯一產生「題目」（checks 答案卷）</b>的一關。每條題目必須掛到一條「人已確認」的需求；門檻和必驗項目<b>只能加不能降</b>。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">selection</span><br><span class="fkind">object</span></td>
+      <td><code>solution_id</code>（選哪案＝<b>案號</b>，1 起算，如 <code>"1"</code>）· <code>reason</code> · <code>rejected_because</code>（為什麼不選其他案）。
+        <span class="gap">selection.missing / selection.unknown_solution</span></td></tr>
+    <tr><td><span class="fname">checks</span><br><span class="fkind">list ≥ 1 條</span></td>
+      <td>每條題目八欄：<code>id</code>（題號）· <code>requirement_id</code> · <code>method</code>（怎麼查）· <code>scope</code> · <code>threshold</code>（什麼算過）· <code>evidence</code>（要附什麼證據）· <code>required</code>（必驗/參考）· <code>execution_kind</code>（test 跑程式 / review 目視）。
+        <span class="gap">checks.missing / check.field_missing / check.requirement_unknown / requirement.unconfirmed / check.threshold_lowered / check.required_downgraded / check.result_deleted</span></td></tr>
+  </table></div>
+  <div class="handout"><span class="tag">交出去</span><span><b>答案卷</b>（checks 表）→ 施工照做、驗收照它逐條作答。</span></div>
+</section>
+
+<section class="card" id="s-build">
+  <h2>03 施工 <span class="en">build</span> <span class="chip worker">WORKER 填</span></h2>
+  <p class="section-sub">照答案卷把活做完。產物只報<b>指紋</b>（路徑/大小/SHA-256），引擎<b>自己重算</b>對現檔，不採信自報數字；路徑必須落在專案根內。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">outputs</span><br><span class="fkind">list ≥ 1 項</span></td>
+      <td>每項：<code>path</code>（相對專案根最佳；根內絕對路徑引擎自動轉）· <code>size</code> · <code>sha256</code>。
+        <span class="gap">outputs.missing / evidence.missing / evidence.hash_mismatch</span></td></tr>
+    <tr><td><span class="fname">done</span> · <span class="fname">unfinished</span><br><span class="fkind">list</span></td>
+      <td>做完了什麼、沒做完什麼；<b>空清單也要交</b>。<span class="gap">unfinished.invalid</span></td></tr>
+    <tr><td><span class="fname">selfcheck</span><br><span class="fkind">text</span></td>
+      <td>交件前照答案卷自檢一遍的結論。<span class="gap">selfcheck.missing</span></td></tr>
+    <tr><td><span class="fname">cases_ran</span><br><span class="fkind">number</span></td>
+      <td>實際跑的案例數，不得灌水；純文件/目視的工單自報 review 類。<span class="gap">cases_ran.zero</span></td></tr>
+  </table></div>
+  <div class="handout"><span class="tag">交出去</span><span><b>產物指紋</b>＋自檢結論 → 驗收者拿它逐條核對。</span></div>
+</section>
+
+<section class="card" id="s-verify">
+  <h2>04 驗收 <span class="en">verify</span> <span class="chip thinker">THINKER 填</span></h2>
+  <p class="section-sub">拿答案卷逐條作答：<b>結果的 id 就是题目的 id</b>，不自造編號。驗收者不能是本單施工的那個 session（自做自驗會被擋）。總判引擎算，不聽角色自報：所有必驗全 PASS＝pass，任一必驗 FAIL＝fail，其餘＝partial。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">results</span><br><span class="fkind">list ≥ 1 項</span></td>
+      <td>每項：<code>id</code>（<b>＝ checks 表的題號</b>）· <code>status</code>（PASS／FAIL／PARTIAL／NOT_RUN）· <code>reason</code> · <code>evidence</code>。
+        <span class="gap">result.missing（某條 check 沒結果）/ result.status_invalid / result.evidence_missing / verify.self_conflict</span></td></tr>
+    <tr><td><span class="fname">cases_ran</span><br><span class="fkind">number</span></td>
+      <td>實測案例數。<span class="gap">cases_ran.zero</span></td></tr>
+  </table></div>
+  <div class="handout"><span class="tag">交出去</span><span><b>逐條答案</b>＋總判（引擎算）→ PLANNER 裁決 close 或 rework。</span></div>
+</section>
+
+<section class="card" id="s-adj">
+  <h2>05 結案裁決 <span class="en">adjudicate</span> <span class="chip planner">PLANNER 填</span></h2>
+  <p class="section-sub">三選一，<b>只交需要的那組欄位</b>（其餘填空字串）：</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">action</span><br><span class="fkind">close / rework / review</span></td>
+      <td>方向。<span class="gap">action.missing / action.invalid</span></td></tr>
+    <tr><td><span class="fname">close_reason</span>（close 時）</td>
+      <td>結案理由。引擎另查總判：verdict 不是 pass 不能 close。<span class="gap">verdict.partial / verdict.fail</span></td></tr>
+    <tr><td><span class="fname">rework_reason</span> · <span class="fname">rework_type</span>（rework 時）</td>
+      <td>退回原因（下一棒會引用）＋類型（施工錯／驗收錯／解法錯）。重工達上限 2 次後走不下去。<span class="gap">rework.limit_reached</span></td></tr>
+    <tr><td><span class="fname">diagnosis</span> · <span class="fname">remedy</span>（review 時）</td>
+      <td>重工達上限後的重新檢討：病因（work／acceptance／solution／scope／resource）＋處方（halt／revise，revise 上限 2）。
+        <span class="gap">review.diagnosis_invalid / review.remedy_invalid / revision.limit_reached</span></td></tr>
+  </table></div>
+  <div class="handout"><span class="tag">交出去</span><span>close → <b>closed</b>；rework → <b>rework_design</b>（支線）。</span></div>
+</section>
+
+<section class="card" id="s-rework">
+  <h2>支線 重做 <span class="en">rework_design → rework_build</span></h2>
+  <p class="section-sub">被 rework 退回後走這邊。改法設計（THINKER）＋重做施工（WORKER），完事回 04 驗收，輪次 +1。</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:34%">欄位</th><th>填法與守衛</th></tr>
+    <tr><td><span class="fname">rework_plan</span><br><span class="fkind">text · THINKER</span></td>
+      <td>針對退回原因設計的改法，<b>要引用那個原因</b>。<span class="gap">action.missing</span></td></tr>
+    <tr><td><span class="fname">outputs / done / unfinished / selfcheck / cases_ran</span><br><span class="fkind">WORKER</span></td>
+      <td>與 03 施工同一套欄位、同一套守衛。</td></tr>
+  </table></div>
+</section>
+
+<section class="card" id="s-closed">
+  <h2>06 結案 <span class="en">closed</span> <span class="chip engine">引擎推進</span></h2>
+  <p class="section-sub">無欄位。引擎推進；專案層的人類收工（project close）要通過雙向追溯：需求 ↔ 工單 ↔ 證據全掛得上。</p>
+</section>
+
+<section class="card" id="handoff">
+  <h2>公共：交接八欄 <span class="en">handoff</span> <span class="chip thinker">每個角色填</span></h2>
+  <p class="section-sub">每關交件都附一份<b>交接檔</b>——下一棒接棒前要讀，缺任一欄整單被退。八欄固定：</p>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:44%">欄位</th><th>寫什麼</th></tr>
+    <tr><td><span class="fname">ROLE</span></td><td>這一棒的角色</td></tr>
+    <tr><td><span class="fname">OPEN WORK</span></td><td>還沒做完的事</td></tr>
+    <tr><td><span class="fname">SUBAGENTS RUNNING</span></td><td>還在跑的 subagent</td></tr>
+    <tr><td><span class="fname">RULES AND NUMBERS IN FORCE</span></td><td>目前有效的門檻／範圍／資源上限（可能已變，別用舊值）</td></tr>
+    <tr><td><span class="fname">RECIPES</span></td><td>可重用的做法</td></tr>
+    <tr><td><span class="fname">DECISIONS AND WHY</span></td><td>已做的決定與理由</td></tr>
+    <tr><td><span class="fname">LESSONS</span></td><td>踩過的坑</td></tr>
+    <tr><td><span class="fname">SPEND</span></td><td>花掉的資源</td></tr>
+  </table></div>
+  <p class="legend">缺口代碼：<code>handoff.missing</code></p>
+</section>
+
+<section class="card" id="pair">
+  <h2>答案卷 ↔ 答案 <span class="en">checks → results</span></h2>
+  <p class="section-sub">02 關產生題目，04 關逐條作答。<b>答案的 id 跟著題目的 id</b>，不自造。</p>
+  <div class="pair">
+    <div class="mini">
+      <h3>題目（checks，PLANNER 在 02 填）</h3>
+      <p class="src">checks 表 · 每行一條</p>
+      <pre>id: C-01
+requirement_id: R-001
+method: 跑 e2e 檢查表
+threshold: 四項全 PASS
+execution_kind: test
+required: 1</pre>
+    </div>
+    <div class="mini">
+      <h3>答案（results，THINKER 在 04 填）</h3>
+      <p class="src">results 表 · id 抄題號</p>
+      <pre>id: C-01            ← 抄自題目
+status: PASS
+reason: 四項皆達
+evidence: 指紋重算一致</pre>
+    </div>
+  </div>
+  <p class="linkline">總判（引擎算，不聽角色自報）：所有 <code>required=1</code> 全 PASS → <b>pass</b>；任一必驗 FAIL → <b>fail</b>；其餘 → <b>partial</b>。05 關 PLANNER 拿總判裁決。</p>
+</section>
+
+<section class="card" id="stuck">
+  <h2>目前卡住處 <span class="en">W-001 / W-002 / W-003 @ verify</span></h2>
+  <div class="stuck">
+    <span class="stamp">已知卡點</span>
+    <p><b>答案卷是空的。</b>這三張單從沒走過 02（checks 表 0 條），04 卻要「每條 check 交一個結果」——
+    題目不存在，驗收者交任何 id 都被判 <code>result.missing</code>，重交幾次結果一樣。</p>
+    <p class="fix">單據本身沒寫錯，錯在上游漏了 02 這棒＋被退的訊息只說「某條 check 沒有結果」、沒說是「答案卷空」。待決修法：
+    （a）三張單補走 02 由 PLANNER 建 checks；（b）守衛兜底——checks 為空時驗收者依工單內容自列驗收項，
+    並把「id 照 checks 表填；清單為空就自列」直接寫進 04 單據欄位說明。</p>
+  </div>
+</section>
+
+<section class="card" id="mech">
+  <h2>被退時怎麼回執 <span class="en">rejects &amp; receipts</span></h2>
+  <p class="section-sub">退件不是停流程：把缺項退回交給件的角色補，補齊重交；同一關連續被退 3 次或回執核對 3 次到期 → 標 <code>awaiting_human</code> 等人裁決。</p>
+  <div class="mech">
+    <div class="row"><span class="k">缺口代碼</span><span>每筆退件帶<b>穩定代碼</b>＋人看得懂的說明（缺哪欄、怎麼補），同一問題永遠同一個代碼。</span></div>
+    <div class="row"><span class="k">回執錨點</span><span>交件時角色帶 <code>task_id</code>＋<code>message_id</code>；引擎到平台上核對「提示詞真的進了、回合真的跑了」才算 verified。</span></div>
+    <div class="row"><span class="k">重試上限</span><span>退回 3 次、回執到期 3 次、重工 2 次、修訂 2 次——達限一律轉人，不無限重錘。</span></div>
+  </div>
+</section>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<footer>欄位與缺口代碼皆摘自 fbf_engine/workflow.py 的守衛定義（提示詞與守衛共用同一份欄位清單）。生成於 2026-11-23。</footer>
+</div>

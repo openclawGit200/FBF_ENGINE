@@ -1,0 +1,47 @@
+<HTML>
+<!--
+	ISSUE 單設計（spec「專案文件設計」第 3 點：ISSUE 單同樣一個資料夾結構，
+	建立時在「未完成」、結案時移到「已完成」）。
+
+	與工單的差別（這是這份模板存在的理由）：
+	- 工單是「做一件事」，ISSUE 是「解一個卡住」；
+	- 工單有「重工」兩輪，ISSUE 是「對策沒生效就重跑同一個流程」，
+	  **連續兩輪未結案就停下來等人類裁決**（spec 第 4(b) 步、第 98 行）；
+	- 結案的是**原發起者**，不是 PLANNER（PLANNER 只填對策）。
+
+	解法來源：THINKER 在同一棒內直接產出至少兩案（**不分派 SUBAGENT**、不帶 context id），
+	兩案不得實質相同（成本與修改範圍不能都一樣）。解法表以「案號」編號（1 起算），
+	PLANNER 選案在 selection.solution_id 填案號。
+
+	role 標記＝誰填那一格；id:fieldname＝欄位名；id:fieldvalue＝引擎寫入的值。
+-->
+<TABLE>
+<TR><TD id:fieldname role:engin>ISSUE本體</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>issue_id</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>version</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>state</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>awaiting_human</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>母工單(work_id)</TD><TD id:fieldvalue></TD><TR>
+<TR><TD id:fieldname role:engin>退回次數(return_count)</TD><TD id:fieldvalue></TD><TR>
+</tr></table>
+<TABLE>
+//--以上內容由MCP產生ISSUE單時，引擎自動生成
+
+<table>
+<tr><td id:fieldname role:worker>ISSUE類型</td><td id:fieldvalue >work_blocked(工單卡住)／needs_decision(要裁決)</TD><TD id:fieldname role:worker>ISSUE完成要求</TD><TD id:fieldvalue>說明達成甚麼效果才算完成</TD></tr>
+<tr><td id:fieldname role:worker>問題</td><td id:fieldvalue >說明甚麼問題</TD><TD id:fieldname role:worker>位置</td><TD id:fieldvalue>發生在哪裡（檔案／步驟／階段）</TD></tr>
+<tr><td id:fieldname role:worker>已試方法</td><td id:fieldvalue >已經試過甚麼</TD><TD id:fieldname role:worker>影響</td><TD id:fieldvalue>影響範圍</TD></tr>
+<tr><td id:fieldname role:worker>要誰決定甚麼</td><td id:fieldvalue >這個問題要誰做決定</TD><TD id:fieldname role:worker>搭配的專案SKILL</TD><TD id:fieldvalue>沿用母工單的專案SKILL</TD></tr>
+//--WORKER、THINKER呼叫MCP產生ISSUE單時，由發起者填寫
+<TR>
+	<TD id:fieldname role:thinker>案號</TD><TD id:fieldname role:thinker>解法</TD><TD id:fieldname role:planner>選擇哪個解法</TD><TD id:fieldname role:planner>對策</TD><TD id:fieldname role:worker>產出</TD>
+	<TD id:fieldname role:worker>產出說明(OPTION)</TD><TD id:fieldname role:worker>自檢說明</TD>
+	<TD id:fieldname role:initiator>結案或退回</TD>
+</TR>
+<TR><TD id:fieldvalue>1</TD><TD id:fieldvalue>解法1（THINKER 一棒直接產出，不分派 SUBAGENT）</TD><TD id:fieldvalue>1（案號）</TD><TD id:fieldvalue>對策：要怎麼修、做完怎麼算解決</TD><TD id:fieldvalue>產出</TD><TD id:fieldvalue>說明</TD><TD id:fieldvalue>對策有沒有生效</TD><TD id:fieldvalue>結案說明／退回原因</TD></TR>
+<TR><TD id:fieldvalue>2</TD><TD id:fieldvalue>解法2（THINKER 一棒直接產出，不分派 SUBAGENT）</TD><TD id:fieldvalue></TD><TD id:fieldvalue></TD><TD id:fieldvalue></TD><TD id:fieldvalue></TD><TD id:fieldvalue></TD><TD id:fieldvalue></TD></TR>
+
+<tr><td id:fieldname role:initiator>對策沒生效的情況(第一輪)</td><td id:fieldvalue >寫下實際發生的情況；退回＝重複上一個流程（解法→對策→施工），退回次數累計</TD><TD id:fieldname role:initiator>退回次數上限</TD><TD id:fieldvalue>2（連續兩輪未結案就停下來等人類裁決）</TD></tr>
+<tr><td id:fieldname role:initiator>對策沒生效的情況(第二輪)</td><td id:fieldvalue >同上；第二輪仍未結案 → awaiting_human，等人類裁決（不是引擎自己繞下去）</TD><TD id:fieldname role:engin>狀態</TD><TD id:fieldvalue>已結案／待人處理</TD></tr>
+</TABLE>
+</HTML>

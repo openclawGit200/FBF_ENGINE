@@ -1,0 +1,25 @@
+# 執行期產物——不隨包散布
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 本機程式索引——每台機器各建各的，不隨包散布
+.codegraph/
+
+# 專案正本與憑證屬於「加入這個 MCP 的那個專案」，不屬於本套件
+*.db
+*.db-wal
+*.db-shm
+.fbf/
+
+# 本機設定、憑證與內部紀錄
+/HANDOFF.md
+/README.original.local.md
+.fbflow/
+.mcp.json
+opencode.json
+.env
+.env.*
+*.log
+.venv/
